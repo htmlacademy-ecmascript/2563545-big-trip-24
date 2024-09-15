@@ -48,12 +48,14 @@ export default class PointView {
   getTemplate() {
     return createPontViewTemplate();
   }
+
   getElement() {
     if(!this.element) {
       this.element = createElement(this.getTemplate());
     }
     return this.element;
   }
+  
   removeElement() {
     this.element = null;
   }
