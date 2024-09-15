@@ -157,22 +157,21 @@ function createEditPointViewTemplate() {
                 </section>
               </form>
             </li>`
-    );
+  );
 }
 export default class EditPointView {
   getTemplate() {
     return createEditPointViewTemplate();
   }
 
-getElement() {
-  if (!this.element) {
-    this.element = createElement(this.getTemplate());
-      }
-  
+  getElement() {
+    if (!this.element) {
+      this.element = createElement(this.getTemplate());
+    }
     return this.element;
-    }
+  }
   
-removeElement() {
-      this.element = null;
-    }
+  removeElement() {
+    this.element = null;
+  }
 }

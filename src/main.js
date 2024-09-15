@@ -12,4 +12,4 @@ const presenter = new Presenter({container: tripEventsElement});
 
 render(new TripView(), tripTripMainElement, RenderPosition.AFTERBEGIN);
 render(new FilterView(), tripFiltersElement);
-Presenter.init();
+presenter.init();
