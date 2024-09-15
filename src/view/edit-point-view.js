@@ -170,7 +170,7 @@ export default class EditPointView {
     }
     return this.element;
   }
-  
+
   removeElement() {
     this.element = null;
   }
