@@ -21,7 +21,7 @@ export default class Presenter {
     render(new EditPointView(), this.eventsComponent.getElement());
     render(new AddPointView(), this.eventsComponent.getElement());
 
-    for (let i = 0; i < this.POINT_COUNT; i++) {
+    for (let i = 0; i < POINT_COUNT; i++) {
       render(new PointView(), this.eventsComponent.getElement());
     }
   }
