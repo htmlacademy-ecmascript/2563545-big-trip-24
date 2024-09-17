@@ -6,6 +6,8 @@ import PointView from './view/point-view.js';
 
 import {render} from './render.js';
 
+const POINT_COUNT = 3;
+
 export default class Presenter {
   eventsComponent = new EventsView();
 
@@ -19,7 +21,7 @@ export default class Presenter {
     render(new EditPointView(), this.eventsComponent.getElement());
     render(new AddPointView(), this.eventsComponent.getElement());
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < this.POINT_COUNT; i++) {
       render(new PointView(), this.eventsComponent.getElement());
     }
   }
