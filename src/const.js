@@ -2,7 +2,7 @@
 //используется в model-points.js
 const COUNT_TRIP_EVENTS = 5;
 // utils.js
-const HOURS_PER_DAY = 24;                       
+const HOURS_PER_DAY = 24;
 const MILLISECONDS_IN_MINUTES = 3600000;
 const dateFormats = {
   fullDateTime: 'YYYY-MM-DDTHH:mm',
