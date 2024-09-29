@@ -7,7 +7,7 @@ function createPontViewTemplate(points, offers, destinations) {
   const typeOffers = offers.find((off) => off.type === points.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => points.offers.includes(typeOffer.id));
   const pointDestinations = destinations.find((des) => des.id === points.destination);
- 
+
   return `<li class="trip-events__item">
               <div class="event">
                 <time class="event__date" datetime="${getYearMonthDay(dateFrom)}">${getMonthDay(dateFrom)}</time>
@@ -55,11 +55,11 @@ export default class PointView {
     this.offers = offers;
     this.destinations = destinations;
   }
-  
+
   getTemplate() {
     return createPontViewTemplate(this.points, this.offers, this.destinations);
   }
-  
+
   getElement() {
     if(!this.element) {
       this.element = createElement(this.getTemplate());
