@@ -11,7 +11,17 @@ const dateFormats = {
   hoursMinutes: 'HH:mm',
   fullDateIncompleteYear: 'YY/MM/DD HH:mm',
 };
-//add/edit points.js
+//add/edit-points-view.js
 const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
-export {COUNT_TRIP_EVENTS, HOURS_PER_DAY, dateFormats, MILLISECONDS_IN_MINUTES, POINT_TYPES};
+//filter.js
+const FilterType = {
+  EVERYTHING: 'everything',
+  PAST: 'past',
+  FUTURE: 'future',
+  PRESENT: 'present',
+};
+
+export {COUNT_TRIP_EVENTS, HOURS_PER_DAY, dateFormats, MILLISECONDS_IN_MINUTES, POINT_TYPES, FilterType};
+
+
