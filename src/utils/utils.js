@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { dateFormats, HOURS_PER_DAY, MILLISECONDS_IN_MINUTES} from './const.js';
+import { dateFormats, HOURS_PER_DAY, MILLISECONDS_IN_MINUTES} from '../const.js';
 
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
@@ -25,9 +25,9 @@ function getHoursMinutes(date) {
   return date ? dayjs.utc(date).format(dateFormats.hoursMinutes) : '';
 }
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
+// function getRandomArrayElement(items) {
+//   return items[Math.floor(Math.random() * items.length)];
+// }
 
 function getDifferencesDates(dateFrom, dateTo) {
   const difference = dayjs.utc(dateTo).diff(dateFrom);
@@ -41,4 +41,4 @@ function getDifferencesDates(dateFrom, dateTo) {
   }
 }
 
-export { getRandomArrayElement, getDifferencesDates, getMonthDay, getFullDateTime, getHoursMinutes, getYearMonthDay, getFullDateIncompleteYear };
+export {getDifferencesDates, getMonthDay, getFullDateTime, getHoursMinutes, getYearMonthDay, getFullDateIncompleteYear };

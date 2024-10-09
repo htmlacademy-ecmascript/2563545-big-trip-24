@@ -1,5 +1,5 @@
-import { createElement } from '../render.js';
-import { getFullDateIncompleteYear } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { getFullDateIncompleteYear } from '../utils/utils.js';
 import { POINT_TYPES } from '../const.js';
 
 function createEditPointViewTemplate(points, offers, destinations) {
@@ -91,25 +91,37 @@ function createEditPointViewTemplate(points, offers, destinations) {
     </section>
   </form>`);
 }
-export default class EditPointView {
-  constructor({points, offers, destinations}) {
-    this.points = points;
-    this.offers = offers;
-    this.destinations = destinations;
+
+export default class EditPointView extends AbstractView {
+  #points = null;
+  #offers = null;
+  #destinations = null;
+  #handleEditClick = null;
+  #handleFormSave = null;
+
+  constructor({points, offers, destinations, onEditClick, onFormSaveClick}) {
+    super();
+    this.#points = points;
+    this.#offers = offers;
+    this.#destinations = destinations;
+    this.#handleEditClick = onEditClick;
+    this.#handleFormSave = onFormSaveClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('form').addEventListener('submit', this.#formSaveHandler);
   }
 
-  getTemplate() {
-    return createEditPointViewTemplate(this.points, this.offers, this.destinations);
+  get template() {
+    return createEditPointViewTemplate(this.#points, this.#offers, this.#destinations);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 
-  removeElement() {
-    this.element = null;
-  }
+  #formSaveHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSave();
+  };
 }

@@ -1,6 +1,6 @@
 
-import { createElement } from '../render';
-import { getDifferencesDates, getMonthDay, getFullDateTime, getHoursMinutes, getYearMonthDay } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { getDifferencesDates, getMonthDay, getFullDateTime, getHoursMinutes, getYearMonthDay } from '../utils/utils.js';
 
 function createPontViewTemplate(points, offers, destinations) {
   const { basePrice, dateFrom, dateTo, isFavorite, type } = points;
@@ -48,26 +48,28 @@ function createPontViewTemplate(points, offers, destinations) {
 `;
 }
 
-export default class PointView {
+export default class PointView extends AbstractView {
+  #points = null;
+  #offers = null;
+  #destinations = null;
+  #handleEditClick = null;
 
-  constructor({points, offers, destinations}) {
-    this.points = points;
-    this.offers = offers;
-    this.destinations = destinations;
+  constructor({points, offers, destinations, onEditClick}) {
+    super();
+    this.#points = points;
+    this.#offers = offers;
+    this.#destinations = destinations;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
-  getTemplate() {
-    return createPontViewTemplate(this.points, this.offers, this.destinations);
+  get template() {
+    return createPontViewTemplate(this.#points, this.#offers, this.#destinations);
   }
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }

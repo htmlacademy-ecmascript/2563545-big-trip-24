@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
-import { getFullDateIncompleteYear } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { getFullDateIncompleteYear } from '../utils/utils.js';
 import { POINT_TYPES } from '../const.js';
 
 function createAddPointViewTemplate(points, destinations) {
@@ -78,26 +78,17 @@ function createAddPointViewTemplate(points, destinations) {
   );
 }
 
-export default class AddPointView {
+export default class AddPointView extends AbstractView {
+  #points = null;
+  #destinations = null;
 
   constructor({points, destinations}) {
-    this.points = points;
-    this.destinations = destinations;
+    super();
+    this.#points = points;
+    this.#destinations = destinations;
   }
 
-  getTemplate() {
-    return createAddPointViewTemplate(this.points, this.destinations);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createAddPointViewTemplate(this.#points, this.#destinations);
   }
 }

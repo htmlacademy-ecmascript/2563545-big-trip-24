@@ -1,4 +1,4 @@
-const Destinations = [
+const destinations = [
   {
     'id': '2184d59b-7448-4f1b-bc2a-87ca1b5d25f6',
     'description': 'Valencia - with an embankment of a mighty river as a centre of attraction',
@@ -127,6 +127,6 @@ const Destinations = [
   }
 ];
 
-const getDestinations = () => Destinations;
+const getDestinations = () => destinations;
 
 export { getDestinations };
