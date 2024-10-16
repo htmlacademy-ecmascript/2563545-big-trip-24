@@ -22,6 +22,19 @@ const FilterType = {
   PRESENT: 'present',
 };
 
-export {COUNT_TRIP_EVENTS, HOURS_PER_DAY, dateFormats, MILLISECONDS_IN_MINUTES, POINT_TYPES, FilterType};
+const SortType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFER: 'offer'
+};
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDIT: 'EDIT'
+};
+
+export {COUNT_TRIP_EVENTS, HOURS_PER_DAY, dateFormats, MILLISECONDS_IN_MINUTES, POINT_TYPES, FilterType, SortType, Mode};
 
 
