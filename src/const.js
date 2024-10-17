@@ -7,6 +7,15 @@ const MILLISECONDS_IN_MINUTES = 3600000;
 const DATE_WITH_TIME_FORMAT = 'DD/MM/YY HH:mm';
 const DATE_FORMAT = 'D MMM';
 const TIME_FORMAT = 'HH:mm';
+
+const dateFormats = {
+  fullDateTime: 'YYYY-MM-DDTHH:mm',
+  yearMonthDay: 'YYYY-MM-DD',
+  monthDay: 'MMM D',
+  hoursMinutes: 'HH:mm',
+  fullDateIncompleteYear: 'YY/MM/DD HH:mm',
+};
+
 //add/edit-points-view.js
 const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
@@ -72,6 +81,6 @@ const URL = {
   OFFERS: 'offers',
 };
 
-export {COUNT_TRIP_EVENTS, HOURS_PER_DAY, DATE_WITH_TIME_FORMAT, DATE_FORMAT, MILLISECONDS_IN_MINUTES, TIME_FORMAT, POINT_TYPES, FilterType, SortType, Mode, UserAction, UpdateType, ListEmptyText, BLANK_POINT, Method, URL};
+export {dateFormats, COUNT_TRIP_EVENTS, HOURS_PER_DAY, DATE_WITH_TIME_FORMAT, DATE_FORMAT, MILLISECONDS_IN_MINUTES, TIME_FORMAT, POINT_TYPES, FilterType, SortType, Mode, UserAction, UpdateType, ListEmptyText, BLANK_POINT, Method, URL};
 
 

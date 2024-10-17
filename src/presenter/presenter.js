@@ -3,7 +3,7 @@ import EventsView from '../view/events-view.js';
 import SortView from '../view/sort-view.js';
 import NewPointView from '../view/new-point-view.js';
 import PointPresenter from './point-presenter.js';
-// import { updatePoint } from '.../view/utils/common.js';
+import { updatePoint } from '../utils/common.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { getWeightForPrice, getWeightForTime } from '../utils/utils.js';
 import NewPointPresenter from './new-point-presenter';
