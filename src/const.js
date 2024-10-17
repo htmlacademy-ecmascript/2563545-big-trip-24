@@ -7,7 +7,6 @@ const MILLISECONDS_IN_MINUTES = 3600000;
 const DATE_WITH_TIME_FORMAT = 'DD/MM/YY HH:mm';
 const DATE_FORMAT = 'D MMM';
 const TIME_FORMAT = 'HH:mm';
-
 const dateFormats = {
   fullDateTime: 'YYYY-MM-DDTHH:mm',
   yearMonthDay: 'YYYY-MM-DD',
