@@ -5,6 +5,7 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 
 const getPointDuration = (pointDateFrom, pointDateTo) => {
+  
   const humatizedDateFrom = dayjs(pointDateFrom);
   const humatizedDateTo = dayjs(pointDateTo);
 
