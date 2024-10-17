@@ -1,4 +1,3 @@
-// import {render, replace} from './framework/render.js';
 import {render, RenderPosition} from './framework/render.js';
 import AddPointView from './view/add-point-view.js';
 // import EditPointView from './view/edit-point-view.js';
