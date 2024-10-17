@@ -1,7 +1,6 @@
-import { capitalize } from './utils/utils.js';
+import { capitalize, getDestinationId, humanizePointDate } from '../utils/utils.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { DATE_WITH_TIME_FORMAT, POINT_TYPES } from '../const.js';
-import { getDestinationId, humanizePointDate } from './utils/point-utils.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import he from 'he';
