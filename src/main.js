@@ -2,7 +2,7 @@
 import {render, RenderPosition} from './framework/render.js';
 import TripView from './view/trip-view';
 import FilterView from './view/filter-view';
-import Presenter from './presenter.js';
+import Presenter from './presenter/presenter.js';
 import ModelPoints from './model/model-points.js';
 import ModelOffers from './model/model-offers.js';
 import ModelDestinations from './model/model-destinations.js';
