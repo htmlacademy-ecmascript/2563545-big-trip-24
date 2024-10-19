@@ -15,7 +15,6 @@ export default class Presenter {
   #loadingComponent = new LoadingView();
   #newPoints = null;
   #pointPresenters = new Map();
-
   #eventsContainer = null;
 
   #modelDestinations = null;
