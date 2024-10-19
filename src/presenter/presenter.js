@@ -1,5 +1,5 @@
-import {render, RenderPosition} from '../framework/render.js';
-import AddPointView from '../view/add-point-view.js';
+import {render, RenderPosition} from './framework/render.js';
+import AddPointView from './view/add-point-view.js';
 // import EditPointView from './view/edit-point-view.js';
 import EventsView from '../view/events-view.js';
 import SortView from '../view/sort-view.js';
