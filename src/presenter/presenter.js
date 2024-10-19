@@ -1,9 +1,6 @@
 import {render, RenderPosition, remove} from '../framework/render.js';
-// import AddPointView from './view/add-point-view.js';
-// import EditPointView from './view/edit-point-view.js';
 import EventsView from '../view/events-view.js';
 import SortView from '../view/sort-view.js';
-// import PointView from './view/point-view.js';
 import NewPointView from '../view/new-point-view.js';
 import PointPresenter from './point-presenter.js';
 import { updatePoint } from '../utils/common.js';
