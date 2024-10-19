@@ -1,15 +1,15 @@
 // import {render, replace} from './framework/render.js';
-import {render, RenderPosition} from './framework/render.js';
-import AddPointView from './view/add-point-view.js';
+import {render, RenderPosition} from '../framework/render.js';
+import AddPointView from '../view/add-point-view.js';
 // import EditPointView from './view/edit-point-view.js';
-import EventsView from './view/events-view.js';
-import SortView from './view/sort-view.js';
+import EventsView from '../view/events-view.js';
+import SortView from '../view/sort-view.js';
 // import PointView from './view/point-view.js';
-import NewPointView from './view/new-point-view.js';
-import PointPresenter from './point-presenter.js';
-import { updatePoint } from '../view/utils/common.js';
+import NewPointView from '../view/new-point-view.js';
+import PointPresenter from '../presenter/point-presenter.js';
+import { updatePoint } from '../utils/common.js';
 import { SortType } from '../const.js';
-import { getWeightForPrice, getWeightForTime } from '../view/utils/utils.js';
+import { getWeightForPrice, getWeightForTime } from '../utils/utils.js';
 
 export default class Presenter {
   #eventsComponent = new EventsView();
