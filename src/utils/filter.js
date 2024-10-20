@@ -1,32 +1,32 @@
-import dayjs from 'dayjs';
-import {FilterType} from '../const';
+import { FilterType } from '../const.js';
 
-const isFutureFilter = (date) => {
-  const currDate = dayjs();
-  const targetDate = dayjs(date);
+const isPointFuture = (point) => {
+  const currentDate = new Date();
+  const pointDataFrom = new Date(point.dateFrom);
 
-  return targetDate.isAfter(currDate);
+  return pointDataFrom > currentDate;
 };
 
-const isPresentFilter = (date) => {
-  const currDate = dayjs();
-  const targetDate = dayjs(date);
+const isPointPast = (point) => {
+  const currentDate = new Date();
+  const pointDataTo = new Date(point.dateTo);
 
-  return targetDate.isSame(currDate, 'day');
+  return pointDataTo < currentDate;
 };
 
-const isPastFilter = (date) => {
-  const currDate = dayjs();
-  const targetDate = dayjs(date);
+const isPointPresent = (point) => {
+  const currentDate = new Date();
+  const pointDataTo = new Date(point.dateTo);
+  const pointDataFrom = new Date(point.dateFrom);
 
-  return targetDate.isBefore(currDate);
+  return pointDataFrom <= currentDate && pointDataTo >= currentDate;
 };
 
 const filter = {
-  [FilterType.EVERYTHING]: (eventPoints) => eventPoints,
-  [FilterType.FUTURE]: (eventPoints) => eventPoints.filter((eventPoint) => isFutureFilter(eventPoint.dateTo)),
-  [FilterType.PRESENT]: (eventPoints) => eventPoints.filter((eventPoint) => isPresentFilter(eventPoint.dateTo)),
-  [FilterType.PAST]: (eventPoints) => eventPoints.filter((eventPoint) => isPastFilter(eventPoint.dateTo)),
+  [FilterType.EVERYTHING]: (points) => points,
+  [FilterType.PAST]: (points) => points.filter((point) => isPointPast(point)),
+  [FilterType.PRESENT]: (points) => points.filter((point) => isPointPresent(point)),
+  [FilterType.FUTURE]: (points) => points.filter((point) => isPointFuture(point)),
 };
 
-export {filter};
+export { filter, isPointPast , isPointFuture, isPointPresent };

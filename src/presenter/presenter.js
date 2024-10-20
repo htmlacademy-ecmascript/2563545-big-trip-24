@@ -1,56 +1,108 @@
-import {render, RenderPosition} from './framework/render.js';
-import AddPointView from './view/add-point-view.js';
-// import EditPointView from './view/edit-point-view.js';
-import EventsView from './view/events-view.js';
-import SortView from './view/sort-view.js';
-// import PointView from './view/point-view.js';
-import NewPointView from './view/new-point-view.js';
+import {render, RenderPosition, remove} from '../framework/render.js';
+import EventsView from '../view/events-view.js';
+import SortView from '../view/sort-view.js';
+import NewPointView from '../view/new-point-view.js';
 import PointPresenter from './point-presenter.js';
-import { updatePoint } from '../view/utils/common.js';
-import { SortType } from '../const.js';
-import { getWeightForPrice, getWeightForTime } from '../view/utils/utils.js';
+import { SortType, UpdateType, UserAction, FilterType, TimeLimit } from '../const.js';
+import { getWeightForPrice, getWeightForTime } from '../utils/utils.js';
+import NewPointPresenter from './new-point-presenter';
+import LoadingView from '../view/loading-view';
+import { filter } from '../utils/filter';
+import UiBlocker from '../framework/ui-blocker/ui-blocker';
 
 export default class Presenter {
   #eventsComponent = new EventsView();
-  // #sortComponent = new SortView();
-  #newPointView = new NewPointView();
-  #pointPresenters = new Map();
+  #loadingComponent = new LoadingView();
+  #newPoints = null;
+  #pointPresenter = new Map();
+  #pointsContainer = null;
 
-  #eventsContainer = null;
-  #modelDestinations = null;
-  #modelOffers = null;
+  // #modelDestinations = null;
+  // #modelOffers = null;
   #modelPoints = null;
+  #modelFilters = null;
+  #newPointPresenter = null;
 
   #destinations = [];
   #offers = [];
-  #points = [];
+  // #points = [];
 
   #sort = null;
+  #isLoading = true;
   #currentSortType = SortType.DAY;
-  #initialPointsLayout = [];
+  #currentFilterType = FilterType.EVERYTHING;
 
-  constructor({eventsContainer, modelPoints, modelOffers, modelDestinations}) {
-    this.#eventsContainer = eventsContainer;
-    this.#modelDestinations = modelDestinations;
-    this.#modelOffers = modelOffers;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
+
+  // constructor({pointsContainer, modelPoints, modelOffers, modelDestinations, modelFilters, onNewPointCancel }) {
+  constructor({pointsContainer, modelPoints, modelFilters, onNewPointCancel }) {
+
+    this.#pointsContainer = pointsContainer;
+    // this.#modelDestinations = modelDestinations;
+    // this.#modelOffers = modelOffers;
     this.#modelPoints = modelPoints;
+    this.#modelFilters = modelFilters;
+
+    this.#newPointPresenter = new NewPointPresenter({
+      pointsContainer: this.#eventsComponent.element,
+      onPointAdd: this.#handleViewAction,
+      onDestroy: onNewPointCancel,
+    });
+
+    this.#modelPoints.addObserver(this.#handleModelEvent);
+    // this.#modelOffers.addObserver(this.#handleModelEvent);
+    // this.#modelDestinations.addObserver(this.#handleModelEvent);
+    this.#modelFilters.addObserver(this.#handleModelEvent);
+  }
+
+  get filter() {
+    return this.#modelFilters.filter;
+  }
+
+  get points() {
+    this.#currentFilterType = this.filter;
+    const points = [...this.#modelPoints.points];
+    const filteredPoints = filter[this.#currentFilterType](points);
+
+    switch (this.#currentSortType) {
+      case SortType.TIME:
+        return filteredPoints.sort(getWeightForTime);
+      case SortType.PRICE:
+        return filteredPoints.sort(getWeightForPrice);
+    }
+    return filteredPoints;
+  }
+
+  get offers() {
+    // return this.#modelOffers.offers;
+    return this.#modelPoints.offers;
+  }
+
+  get destinations() {
+    // return this.#modelDestinations.destinations;
+    return this.#modelPoints.destinations;
+  }
+
+  createPoint() {
+    this.#currentSortType = FilterType.DAY;
+    this.#modelFilters.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newPointPresenter.init(this.offers, this.destinations);
   }
 
   init() {
-    this.#points = [...this.#modelPoints.points()];
-    this.#destinations = this.#modelDestinations.destinations();
-    this.#offers = this.#modelOffers.offers();
-    this.#initialPointsLayout = [...this.#modelPoints.points];
-
+    this.#renderSort(this.#currentSortType);
     this.#renderMain();
-    render(new AddPointView(), this.#eventsComponent.element());
   }
 
   #renderMain() {
-    render(this.#eventsComponent, this.#eventsContainer);
+    render(this.#eventsComponent, this.#pointsContainer);
 
-    if (this.#points.length === 0) {
-      this.#renderNewPointView();
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
     }
 
     this.#renderPointsList();
@@ -58,66 +110,100 @@ export default class Presenter {
 
   #renderPointView(point) {
     const pointPresenter = new PointPresenter({
-      pointContainer: this.#eventsComponent.element,
-      onPointsChange: this.#handlePointsChange,
+      eventsComponent: this.#eventsComponent.element,
+      onPointsChange: this.#handleModelEvent,
       onModeChange: this.#handleModeChange,
       onPointClear: this.#clearPoint,
-      onEditPointView: this.#resetPointView
+      onEditPointView: this.#resetPointView,
+      onModelUpdate: this.#handleViewAction,
     });
 
     pointPresenter.init(point, this.#offers, this.#destinations);
-    this.#pointPresenters.set(point.id, pointPresenter);
+    this.#pointPresenter.set(point.id, pointPresenter);
   }
+
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+    switch (actionType) {
+      case UserAction.UPDATE_POINT:
+        this.#pointPresenter.get(update.id).setSaving();
+        try {
+          await this.#modelPoints.updatePoint(updateType, update);
+        } catch (err) {
+          this.#pointPresenter.get(update.id).setAborting();
+        }
+        break;
+      case UserAction.ADD_POINT:
+        this.#newPointPresenter.setSaving();
+        try {
+          await this.#modelPoints.addPoint(updateType, update);
+        } catch (err) {
+          this.#newPointPresenter.setAborting();
+        }
+        break;
+      case UserAction.DELETE_POINT:
+        this.#pointPresenter.get(update.id).setDeleting();
+        try {
+          await this.#modelPoints.deletePoint(updateType, update);
+        } catch (err) {
+          this.#pointPresenter.get(update.id).setAborting();
+        }
+        break;
+    }
+    this.#uiBlocker.unblock();
+  };
+
+  #handleModelEvent = (updateType, updatedPoint) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.offers, this.destinations);
+        break;
+      case UpdateType.MINOR:
+        this.#clearPointsList();
+        this.#renderPointsList();
+        break;
+      case UpdateType.MAJOR:
+        this.#clearPointsList({ resetFilters: true, resetSorting: true });
+        this.#renderPointsList();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderMain();
+        break;
+    }
+  };
 
   #handleSortClick = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
-    this.#sortPoints(sortType);
-    this.#renderSort(sortType);
+    this.#currentSortType = sortType;
+    this.#renderSort(this.#currentSortType);
+    remove(this.#sort);
     this.#clearPointsList();
     this.#renderPointsList();
   };
 
-  #handlePointsChange = (updatedPoint) => {
-    this.#points = updatePoint(this.#points, updatedPoint);
-    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint, this.#offers, this.#destinations);
-  };
-
   #handleModeChange = () => {
-    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
   #clearPoint = (point) => {
-    const targetPresenter = this.#pointPresenters.get(point.id);
-    targetPresenter.destroy();
+    this.#handleViewAction(UserAction.DELETE_POINT, UpdateType.MINOR, point);
   };
 
   #resetPointView = (point) => {
-    this.#pointPresenters.get(point.id).resetView();
+    this.#pointPresenter.get(point.id).resetView();
   };
 
   #renderNewPointView() {
-    render(this.#newPointView, this.#eventsComponent.element);
+    this.#newPoints = new NewPointView({
+      filter: this.#currentFilterType,
+    });
+    remove(this.#eventsComponent);
+    render(this.#newPoints, this.#pointsContainer);
   }
-
-  #sortPoints = (sortType) => {
-    switch (sortType) {
-      case SortType.TIME:
-        this.#points.sort(getWeightForTime);
-        break;
-      case SortType.PRICE:
-        this.#points.sort(getWeightForPrice);
-        break;
-      case SortType.EVENT:
-        break;
-      case SortType.OFFER:
-        break;
-      case SortType.DAY:
-        this.#points = [...this.#initialPointsLayout];
-    }
-    this.#currentSortType = sortType;
-  };
 
   #renderSort(sortType) {
     this.#sort = new SortView({
@@ -125,16 +211,34 @@ export default class Presenter {
       sortType: sortType
     });
 
-    render(this.#sort, this.#eventsContainer, RenderPosition.AFTERBEGIN);
+    render(this.#sort, this.#pointsContainer, RenderPosition.AFTERBEGIN);
   }
 
-  #clearPointsList() {
-    this.#pointPresenters.forEach((presenter) => presenter.destroy());
-    this.#pointPresenters.clear();
+  #renderLoading() {
+    render(this.#loadingComponent,this.#pointsContainer);
+  }
+
+  #clearPointsList({ resetFilters = false, resetSorting = false } = {}) {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
+    remove(this.#loadingComponent);
+    if (resetFilters) {
+      this.#currentFilterType = FilterType.EVERYTHING;
+    }
+
+    if (resetSorting) {
+      this.#currentSortType = SortType.DAY;
+    }
   }
 
   #renderPointsList() {
-    for (const point of this.#points) {
+    remove(this.#newPoints);
+
+    if (this.points.length === 0 && !document.querySelector('.trip-events__msg')) {
+      this.#renderNewPointView();
+      return;
+    }
+    for (const point of this.points) {
       this.#renderPointView(point);
     }
   }
