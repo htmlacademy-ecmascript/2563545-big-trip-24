@@ -72,6 +72,8 @@ const BLANK_POINT = {
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
 const URL = {
@@ -80,6 +82,11 @@ const URL = {
   OFFERS: 'offers',
 };
 
-export {dateFormats, COUNT_TRIP_EVENTS, HOURS_PER_DAY, DATE_WITH_TIME_FORMAT, DATE_FORMAT, MILLISECONDS_IN_MINUTES, TIME_FORMAT, POINT_TYPES, FilterType, SortType, Mode, UserAction, UpdateType, ListEmptyText, BLANK_POINT, Method, URL};
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+export {TimeLimit, dateFormats, COUNT_TRIP_EVENTS, HOURS_PER_DAY, DATE_WITH_TIME_FORMAT, DATE_FORMAT, MILLISECONDS_IN_MINUTES, TIME_FORMAT, POINT_TYPES, FilterType, SortType, Mode, UserAction, UpdateType, ListEmptyText, BLANK_POINT, Method, URL};
 
 

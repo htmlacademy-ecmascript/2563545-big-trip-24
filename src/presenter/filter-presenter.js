@@ -1,22 +1,22 @@
-import { render, replace, remove } from '../framework/render';
+import { render, replace, remove } from '../framework/render.js';
 import FiltersView from '../view/filter-view';
 import { UpdateType } from '../const';
 import { filter } from '../utils/filter';
 
 export default class FiltersPresenter {
-  #modelFilter = null;
+  #modelFilters = null;
   #filtersContainer = null;
   #modelPoints = null;
 
   #filtersComponent = null;
 
-  constructor({ filtersContainer, pointModel, filtersModel }) {
+  constructor({ filtersContainer, modelPoints, modelFilters }) {
     this.#filtersContainer = filtersContainer;
-    this.#modelPoints = pointModel;
-    this.#modelFilter = filtersModel;
+    this.#modelPoints = modelPoints;
+    this.#modelFilters = modelFilters;
 
     this.#modelPoints.addObserver(this.#handleModelEvent);
-    this.#modelFilter.addObserver(this.#handleModelEvent);
+    this.#modelFilters.addObserver(this.#handleModelEvent);
   }
 
   get filters() {
@@ -52,10 +52,10 @@ export default class FiltersPresenter {
   };
 
   #handleFiltersChange = (filterType) => {
-    if (this.#modelFilter.filter === filterType) {
+    if (this.#modelFilters.filter === filterType) {
       return;
     }
 
-    this.#modelFilter.setFilter(UpdateType.MAJOR, filterType);
+    this.#modelFilters.setFilter(UpdateType.MAJOR, filterType);
   };
 }

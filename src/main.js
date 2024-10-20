@@ -17,7 +17,10 @@ const mainContainer = document.querySelector('.trip-main');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const pointsContainer = document.querySelector('.trip-events');
 
-const modelPoints = new ModelPoints({pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)});
+const modelPoints = new ModelPoints({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
+  pointsContainer: pointsContainer,
+});
 const modelOffers = new ModelOffers();
 const modelDestinations = new ModelDestinations();
 const modelFilters = new ModelFilters();
@@ -54,6 +57,7 @@ function cancelNewPoint() {
 
 filtersPresenter.init();
 presenter.init();
+
 modelPoints.init()
   .finally(() => {
     render(addNewPointButton, mainContainer);

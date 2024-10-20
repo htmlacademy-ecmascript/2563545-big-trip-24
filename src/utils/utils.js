@@ -92,4 +92,4 @@ const getOffersByType = (type, offers) => offers.find((offer) => offer.type === 
 
 const getDestinationId = (destinationName, destinations) => destinations.find((destinationElement) => destinationElement.name === destinationName).id;
 
-export {getFullDateIncompleteYear, getMonthDay, getYearMonthDay, getHoursMinutes, getDifferencesDates, getFullDateTime, humanizePointDate, getWeightForPrice, getWeightForTime, capitalize, getOffersByType, getDestinationId};
+export {getPointDuration, getFullDateIncompleteYear, getMonthDay, getYearMonthDay, getHoursMinutes, getDifferencesDates, getFullDateTime, humanizePointDate, getWeightForPrice, getWeightForTime, capitalize, getOffersByType, getDestinationId};

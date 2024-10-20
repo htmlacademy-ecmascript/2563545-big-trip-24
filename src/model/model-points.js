@@ -1,15 +1,21 @@
 import Observable from '../framework/observable';
 import { UpdateType } from '../const';
+import FailedToLoadView from '../view/failed-to-load-view';
+import { render } from '../framework/render';
 
 export default class ModelPoints extends Observable{
+
   #points = [];
   #destinations = [];
   #offers = [];
   #pointsApiService = null;
+  #failedToLoadComponent = new FailedToLoadView();
+  #pointsContainer = null;
 
-  constructor({ pointsApiService }) {
+  constructor({ pointsApiService, pointsContainer }) {
     super();
     this.#pointsApiService = pointsApiService;
+    this.#pointsContainer = pointsContainer;
   }
 
   get points() {
@@ -20,17 +26,17 @@ export default class ModelPoints extends Observable{
     return this.#destinations;
   }
 
-  get dffers() {
+  get offers() {
     return this.#offers;
   }
 
-  #adaptToClient(points) {
+  #adaptToClient(point) {
     const adaptedPoint = {
-      ...points,
-      dateFrom: points['date_from'] !== null ? new Date(points['date_from']) : points['date_from'],
-      dateTo: points['date_to'] !== null ? new Date(points['date_to']) : points['date_to'],
-      basePrice: points['base_price'],
-      isFavorite: points['is_favorite'],
+      ...point,
+      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : null,
+      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : null,
+      basePrice: point['base_price'],
+      isFavorite: point['is_favorite'],
     };
 
     delete adaptedPoint['date_from'];
@@ -49,16 +55,14 @@ export default class ModelPoints extends Observable{
 
       this.#offers = await this.#pointsApiService.allOffers;
     } catch (err) {
-      this.#points = [];
-      this.#destinations = [];
-      this.#offers = [];
+      render(this.#failedToLoadComponent, this.#pointsContainer);
     }
 
     this._notify(UpdateType.INIT);
   }
 
   async updatePoint(updateType, update) {
-    const index = this.#points.findIndex((points) => points.id === update.id);
+    const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
       throw new Error('Can\'t update unexisting point');
@@ -80,27 +84,30 @@ export default class ModelPoints extends Observable{
     }
   }
 
-  addPoint(updateType, update) {
-    this.#points = [
-      update,
-      ...this.#points,
-    ];
+  async addPoint(updateType, update) {
+    try {
+      const response = await this.#pointsApiService.addPoint(update);
+      const addedPoint = this.#adaptToClient(response);
+      this.#points = [addedPoint, ...this.#points];
 
-    this._notify(updateType, update);
+      this._notify(updateType, addedPoint);
+    } catch (err) {
+      throw new Error('Can\'t add task');
+    }
   }
 
-  deletePoint(updateType, update) {
-    const index = this.#points.findIndex((points) => points.id === update.id);
+  async deletePoint(updateType, update) {
+    const index = this.#points.findIndex((point) => point.id === update.id);
 
-    if (index === -1) {
-      throw new Error('Can\'t delete unexisting task');
+    try {
+      await this.#pointsApiService.deletePoint(update);
+      this.#points = [
+        ...this.#points.slice(0, index),
+        ...this.#points.slice(index + 1),
+      ];
+      this._notify(updateType);
+    } catch (err) {
+      throw new Error('Can\'t delete task');
     }
-
-    this.#points = [
-      ...this.#points.slice(0, index),
-      ...this.#points.slice(index + 1),
-    ];
-
-    this._notify(updateType);
   }
 }
