@@ -9,6 +9,7 @@ const capitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 const humanizePointDate = (pointDate, dateFormat) => pointDate ? dayjs(pointDate).format(dateFormat) : '';
 
 const getPointDuration = (pointDateFrom, pointDateTo) => {
+  
   const humatizedDateFrom = dayjs(pointDateFrom);
   const humatizedDateTo = dayjs(pointDateTo);
 
