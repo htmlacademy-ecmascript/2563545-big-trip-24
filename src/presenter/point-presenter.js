@@ -9,8 +9,10 @@ export default class PointPresenter {
   #editPointComponent = null;
 
   #point = null;
-  #offers = [];
-  #destinations = [];
+  // #offers = [];
+  // #destinations = [];
+  #modelDestinations = null;
+  #modelOffers = null;
 
   #handleModelEvent = null;
   #handleModeChange = null;
@@ -20,27 +22,31 @@ export default class PointPresenter {
 
   #mode = Mode.DEFAULT;
 
-  constructor({ eventsComponent, onPointsChange, onModeChange, onPointClear, onEditPointView, onModelUpdate }) {
+  constructor({ eventsComponent, onPointsChange, onModeChange, onPointClear, onEditPointView, onModelUpdate, modelOffers, modelDestinations }) {
     this.#eventsComponent = eventsComponent;
     this.#handleModelEvent = onPointsChange;
     this.#handleModeChange = onModeChange;
     this.#clearPoint = onPointClear;
     this.#resetPointView = onEditPointView;
     this.#handleModelUpdate = onModelUpdate;
+    this.#modelDestinations = modelDestinations;
+    this.#modelOffers = modelOffers;
   }
 
   init(point, offers, destinations) {
     this.#point = point;
-    this.#offers = offers;
-    this.#destinations = destinations;
+    // this.#offers = offers;
+    // this.#destinations = destinations;
 
     const prevPointComponent = this.#pointComponent;
     const prevEditPointComponent = this.#editPointComponent;
 
     this.#pointComponent = new PointView({
       point: this.#point,
-      offers: this.#offers,
-      destinations: this.#destinations,
+      // offers: this.#offers,
+      // destinations: this.#destinations,
+      destinations: this.#modelDestinations.destinations,
+      offers: this.#modelOffers.offers,
 
       onEditClick: () => {
         this.#replacePointToForm();
@@ -50,8 +56,10 @@ export default class PointPresenter {
 
     this.#editPointComponent = new EditPointView({
       point: this.#point,
-      offers: this.#offers,
-      destinations: this.#destinations,
+      // offers: this.#offers,
+      // destinations: this.#destinations,
+      destinations: this.#modelDestinations.destinations,
+      offers: this.#modelOffers.offers,
 
       onEditClick: this.#handleEditClick,
       onFormSaveClick: this.#handleSaveClick,

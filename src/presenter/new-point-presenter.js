@@ -3,32 +3,42 @@ import { render, remove, RenderPosition } from '../framework/render.js';
 import EditPointView from '../view/edit-point-view.js';
 
 export default class NewPointPresenter {
+  #point = BLANK_POINT;
   #pointsContainer = null;
   #handlePointAdd = null;
   #handleDestroy = null;
 
   #editPointComponent = null;
 
-  #offers = [];
-  #destinations = [];
+  // #offers = [];
+  // #destinations = [];
+  #modelDestinations = null;
+  #modelOffers = null;
 
-  constructor({ pointsContainer, onPointAdd, onDestroy }) {
+  constructor({ pointsContainer, onPointAdd, onDestroy, modelOffers, modelDestinations }) {
     this.#pointsContainer = pointsContainer;
     this.#handlePointAdd = onPointAdd;
     this.#handleDestroy = onDestroy;
+    this.#modelDestinations = modelDestinations;
+    this.#modelOffers = modelOffers;
   }
 
-  init(offers, destinations) {
-    this.#offers = offers;
-    this.#destinations = destinations;
+  // init(offers, destinations) {
+    init() {
+    
+    // this.#offers = offers;
+    // this.#destinations = destinations;
     if (this.#editPointComponent !== null) {
       return;
     }
 
     this.#editPointComponent = new EditPointView({
-      point: BLANK_POINT,
-      offers: this.#offers,
-      destinations: this.#destinations,
+      // point: BLANK_POINT,
+      point: this.#point,
+      // offers: this.#offers,
+      // destinations: this.#destinations,
+      destinations: this.#modelDestinations.destinations,
+      offers: this.#modelOffers.offers,
       onFormSaveClick: this.#handleFormSaveClick,
       onFormDeleteClick: this.#handleFormDeleteClick,
       isNewPoint: true

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { dateFormats, HOURS_PER_DAY, MILLISECONDS_IN_MINUTES} from '../const.js';
+// import { dateFormats, HOURS_PER_DAY, MILLISECONDS_IN_MINUTES} from '../const.js';
 
 dayjs.extend(utc);
 
@@ -57,40 +57,41 @@ function getWeightForTime(a, b) {
   }
 }
 
-function getDifferencesDates(dateFrom, dateTo) {
-  const difference = dayjs.utc(dateTo).diff(dateFrom);
+// function getDifferencesDates(dateFrom, dateTo) {
+//   const difference = dayjs.utc(dateTo).diff(dateFrom);
 
-  if (difference < MILLISECONDS_IN_MINUTES) {
-    return dayjs.utc(difference).format('mm[M]');
-  } else if (difference > MILLISECONDS_IN_MINUTES && difference < MILLISECONDS_IN_MINUTES * HOURS_PER_DAY) {
-    return dayjs.utc(difference).format('HH[H] mm[M]');
-  } else {
-    return dayjs.utc(difference).format('DD[D] HH[H] mm[M]');
-  }
-}
+//   if (difference < MILLISECONDS_IN_MINUTES) {
+//     return dayjs.utc(difference).format('mm[M]');
+//   } else if (difference > MILLISECONDS_IN_MINUTES && difference < MILLISECONDS_IN_MINUTES * HOURS_PER_DAY) {
+//     return dayjs.utc(difference).format('HH[H] mm[M]');
+//   } else {
+//     return dayjs.utc(difference).format('DD[D] HH[H] mm[M]');
+//   }
+// }
 
-function getFullDateIncompleteYear(date) {
-  return date ? dayjs.utc(date).format(dateFormats.fullDateIncompleteYear) : '';
-}
+// function getFullDateIncompleteYear(date) {
+//   return date ? dayjs.utc(date).format(dateFormats.fullDateIncompleteYear) : '';
+// }
 
-function getMonthDay(date) {
-  return date ? dayjs.utc(date).format(dateFormats.monthDay) : '';
-}
+// function getMonthDay(date) {
+//   return date ? dayjs.utc(date).format(dateFormats.monthDay) : '';
+// }
 
-function getYearMonthDay(date) {
-  return date ? dayjs.utc(date).format(dateFormats.yearMonthDay) : '';
-}
+// function getYearMonthDay(date) {
+//   return date ? dayjs.utc(date).format(dateFormats.yearMonthDay) : '';
+// }
 
-function getFullDateTime(date) {
-  return date ? dayjs.utc(date).format(dateFormats.fullDateTime) : '';
-}
+// function getFullDateTime(date) {
+//   return date ? dayjs.utc(date).format(dateFormats.fullDateTime) : '';
+// }
 
-function getHoursMinutes(date) {
-  return date ? dayjs.utc(date).format(dateFormats.hoursMinutes) : '';
-}
+// function getHoursMinutes(date) {
+//   return date ? dayjs.utc(date).format(dateFormats.hoursMinutes) : '';
+// }
 
 const getOffersByType = (type, offers) => offers.find((offer) => offer.type === type).offers;
 
 const getDestinationId = (destinationName, destinations) => destinations.find((destinationElement) => destinationElement.name === destinationName).id;
 
-export {getPointDuration, getFullDateIncompleteYear, getMonthDay, getYearMonthDay, getHoursMinutes, getDifferencesDates, getFullDateTime, humanizePointDate, getWeightForPrice, getWeightForTime, capitalize, getOffersByType, getDestinationId};
+// export {getPointDuration, getFullDateIncompleteYear, getMonthDay, getYearMonthDay, getHoursMinutes, getDifferencesDates, getFullDateTime, humanizePointDate, getWeightForPrice, getWeightForTime, capitalize, getOffersByType, getDestinationId};
+export {getPointDuration, humanizePointDate, getWeightForPrice, getWeightForTime, capitalize, getOffersByType, getDestinationId};

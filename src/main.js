@@ -17,13 +17,18 @@ const mainContainer = document.querySelector('.trip-main');
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const pointsContainer = document.querySelector('.trip-events');
 
-const modelPoints = new ModelPoints({
-  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
-  pointsContainer: pointsContainer,
-});
-const modelOffers = new ModelOffers();
-const modelDestinations = new ModelDestinations();
+const pointsApiService =  new PointsApiService(END_POINT, AUTHORIZATION);
+const modelOffers = new ModelOffers(pointsApiService);
+const modelDestinations = new ModelDestinations(pointsApiService);
 const modelFilters = new ModelFilters();
+
+const modelPoints = new ModelPoints({
+  // pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
+  pointsApiService: pointsApiService,
+  // pointsContainer: pointsContainer,
+  modelDestinations,
+  modelOffers
+});
 
 const presenter = new Presenter({
   pointsContainer: pointsContainer,

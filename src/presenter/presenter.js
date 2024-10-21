@@ -9,7 +9,7 @@ import NewPointPresenter from './new-point-presenter';
 import LoadingView from '../view/loading-view';
 import { filter } from '../utils/filter';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
-
+console.log('Presenter')
 export default class Presenter {
   #eventsComponent = new EventsView();
   #loadingComponent = new LoadingView();
@@ -17,8 +17,8 @@ export default class Presenter {
   #pointPresenter = new Map();
   #pointsContainer = null;
 
-  // #modelDestinations = null;
-  // #modelOffers = null;
+  #modelDestinations = null;
+  #modelOffers = null;
   #modelPoints = null;
   #modelFilters = null;
   #newPointPresenter = null;
@@ -37,12 +37,12 @@ export default class Presenter {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  // constructor({pointsContainer, modelPoints, modelOffers, modelDestinations, modelFilters, onNewPointCancel }) {
-  constructor({pointsContainer, modelPoints, modelFilters, onNewPointCancel }) {
+  constructor({pointsContainer, modelPoints, modelOffers, modelDestinations, modelFilters, onNewPointCancel }) {
+  // constructor({pointsContainer, modelPoints, modelFilters, onNewPointCancel }) {
 
     this.#pointsContainer = pointsContainer;
-    // this.#modelDestinations = modelDestinations;
-    // this.#modelOffers = modelOffers;
+    this.#modelDestinations = modelDestinations;
+    this.#modelOffers = modelOffers;
     this.#modelPoints = modelPoints;
     this.#modelFilters = modelFilters;
 
@@ -50,6 +50,8 @@ export default class Presenter {
       pointsContainer: this.#eventsComponent.element,
       onPointAdd: this.#handleViewAction,
       onDestroy: onNewPointCancel,
+      modelOffers,
+      modelDestinations
     });
 
     this.#modelPoints.addObserver(this.#handleModelEvent);
@@ -64,7 +66,7 @@ export default class Presenter {
 
   get points() {
     this.#currentFilterType = this.filter;
-    const points = [...this.#modelPoints.points];
+    const points = this.#modelPoints.points;
     const filteredPoints = filter[this.#currentFilterType](points);
 
     switch (this.#currentSortType) {
@@ -76,20 +78,21 @@ export default class Presenter {
     return filteredPoints;
   }
 
-  get offers() {
-    // return this.#modelOffers.offers;
-    return this.#modelPoints.offers;
-  }
+  // get offers() {
+  //   // return this.#modelOffers.offers;
+  //   return this.#modelPoints.offers;
+  // }
 
-  get destinations() {
-    // return this.#modelDestinations.destinations;
-    return this.#modelPoints.destinations;
-  }
+  // get destinations() {
+  //   // return this.#modelDestinations.destinations;
+  //   return this.#modelPoints.destinations;
+  // }
 
   createPoint() {
     this.#currentSortType = FilterType.DAY;
     this.#modelFilters.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newPointPresenter.init(this.offers, this.destinations);
+    // this.#newPointPresenter.init(this.offers, this.destinations);
+    this.#newPointPresenter.init();
   }
 
   init() {
@@ -116,9 +119,12 @@ export default class Presenter {
       onPointClear: this.#clearPoint,
       onEditPointView: this.#resetPointView,
       onModelUpdate: this.#handleViewAction,
+      modelDestinations: this.#modelDestinations,
+      modelOffers: this.#modelOffers,
     });
 
-    pointPresenter.init(point, this.#offers, this.#destinations);
+    // pointPresenter.init(point, this.#offers, this.#destinations);
+    pointPresenter.init(point);
     this.#pointPresenter.set(point.id, pointPresenter);
   }
 

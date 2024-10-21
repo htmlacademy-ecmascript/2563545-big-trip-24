@@ -1,7 +1,6 @@
 import { humanizePointDate, getPointDuration } from '../utils/utils.js';
 import { DATE_FORMAT, TIME_FORMAT } from '../const';
 import AbstractView from '../framework/view/abstract-view';
-
 const getOffers = (offerType, offersList) => {
   const offers = offersList.filter((offer) => offer.type === offerType);
 
@@ -19,6 +18,7 @@ function createPontViewTemplate(point, offers, destinations) {
   let modifiedDestination = '';
   if (destination !== null) {
     modifiedDestination = destinations.find((destinationElement) => destinationElement.id === destination).name;
+
   }
 
   const favoriteClassName = isFavorite ? 'event__favorite-btn event__favorite-btn--active' : 'event__favorite-btn';

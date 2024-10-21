@@ -1,5 +1,5 @@
-import Observable from '../framework/observable';
-import { FilterType } from '../const';
+import Observable from '../framework/observable.js';
+import { FilterType } from '../const.js';
 
 export default class ModelFilters extends Observable {
   #filter = FilterType.EVERYTHING;

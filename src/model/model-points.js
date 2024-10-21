@@ -1,34 +1,40 @@
-import Observable from '../framework/observable';
-import { UpdateType } from '../const';
-import FailedToLoadView from '../view/failed-to-load-view';
-import { render } from '../framework/render';
+import Observable from '../framework/observable.js';
+import { UpdateType } from '../const.js';
+// import FailedToLoadView from '../view/failed-to-load-view.js';
+// import { render } from '../framework/render';
 
 export default class ModelPoints extends Observable{
 
   #points = [];
-  #destinations = [];
-  #offers = [];
+  // #destinations = [];
+  // #offers = [];
   #pointsApiService = null;
-  #failedToLoadComponent = new FailedToLoadView();
-  #pointsContainer = null;
+  // #failedToLoadComponent = new FailedToLoadView();
+  // #pointsContainer = null;
+  
+  #modelDestinations = null;
+  #modelOffers = null;
 
-  constructor({ pointsApiService, pointsContainer }) {
+  // constructor({ pointsApiService, pointsContainer, modelDestinations, modelOffers}) {
+    constructor({ pointsApiService, modelDestinations, modelOffers}) {
     super();
     this.#pointsApiService = pointsApiService;
-    this.#pointsContainer = pointsContainer;
+    this.#modelDestinations = modelDestinations;
+    this.#modelOffers = modelOffers;
+    // this.#pointsContainer = pointsContainer;
   }
 
   get points() {
     return this.#points;
   }
 
-  get destinations() {
-    return this.#destinations;
-  }
+  // get destinations() {
+  //   return this.#destinations;
+  // }
 
-  get offers() {
-    return this.#offers;
-  }
+  // get offers() {
+  //   return this.#offers;
+  // }
 
   #adaptToClient(point) {
     const adaptedPoint = {
@@ -49,13 +55,15 @@ export default class ModelPoints extends Observable{
 
   async init() {
     try {
+      await Promise.all([this.#modelDestinations.init(), this.modelOffers.init()])
       const points = await this.#pointsApiService.points;
       this.#points = points.map(this.#adaptToClient);
-      this.#destinations = await this.#pointsApiService.allDestinations;
+      // this.#destinations = await this.#pointsApiService.allDestinations;
 
-      this.#offers = await this.#pointsApiService.allOffers;
+      // this.#offers = await this.#pointsApiService.allOffers;
     } catch (err) {
-      render(this.#failedToLoadComponent, this.#pointsContainer);
+      // render(this.#failedToLoadComponent, this.#pointsContainer);
+      this.#points = [];
     }
 
     this._notify(UpdateType.INIT);
