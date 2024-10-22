@@ -1,50 +1,39 @@
-import { BLANK_POINT, UpdateType, UserAction } from '../const.js';
-import { render, remove, RenderPosition } from '../framework/render.js';
-import EditPointView from '../view/edit-point-view.js';
+import { BLANK_POINT, UpdateType, UserAction } from '../const';
+import { render, remove, RenderPosition } from '../framework/render';
+import EditPointView from '../view/edit-point-view';
 
 export default class NewPointPresenter {
-  #point = BLANK_POINT;
-  #pointsContainer = null;
+  #pointsListContainer = null;
+  #editPointComponent = null;
   #handlePointAdd = null;
   #handleDestroy = null;
+  #offers = [];
+  #destinations = [];
 
-  #editPointComponent = null;
-
-  // #offers = [];
-  // #destinations = [];
-  #modelDestinations = null;
-  #modelOffers = null;
-
-  constructor({ pointsContainer, onPointAdd, onDestroy, modelOffers, modelDestinations }) {
-    this.#pointsContainer = pointsContainer;
+  constructor({ pointsListContainer, onPointAdd, onDestroy }) {
+    this.#pointsListContainer = pointsListContainer;
     this.#handlePointAdd = onPointAdd;
     this.#handleDestroy = onDestroy;
-    this.#modelDestinations = modelDestinations;
-    this.#modelOffers = modelOffers;
   }
 
-  // init(offers, destinations) {
-    init() {
-    
-    // this.#offers = offers;
-    // this.#destinations = destinations;
+  init(offers, destinations) {
+    this.#offers = offers;
+    this.#destinations = destinations;
+
     if (this.#editPointComponent !== null) {
       return;
     }
 
     this.#editPointComponent = new EditPointView({
-      // point: BLANK_POINT,
-      point: this.#point,
-      // offers: this.#offers,
-      // destinations: this.#destinations,
-      destinations: this.#modelDestinations.destinations,
-      offers: this.#modelOffers.offers,
+      point: BLANK_POINT,
+      offers: this.#offers,
+      destinations: this.#destinations,
       onFormSaveClick: this.#handleFormSaveClick,
       onFormDeleteClick: this.#handleFormDeleteClick,
       isNewPoint: true
     });
 
-    render(this.#editPointComponent, this.#pointsContainer, RenderPosition.AFTERBEGIN);
+    render(this.#editPointComponent, this.#pointsListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
@@ -88,7 +77,6 @@ export default class NewPointPresenter {
       UpdateType.MINOR,
       point,
     );
-    this.destroy();
   };
 
   #handleFormDeleteClick = () => {
@@ -96,7 +84,7 @@ export default class NewPointPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape') {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();
       document.removeEventListener('keydown', this.#escKeyDownHandler);

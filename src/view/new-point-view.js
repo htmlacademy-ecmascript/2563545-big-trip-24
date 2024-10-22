@@ -1,9 +1,9 @@
 import AbstractView from '../framework/view/abstract-view';
 import { ListEmptyText } from '../const';
 
-function createNewPointViewTemplate(filterType) {
-
+function createNewPointTemplate(filterType) {
   const listEmptyText = ListEmptyText[filterType];
+
   return `<p class="trip-events__msg">${listEmptyText}</p>`;
 }
 
@@ -16,6 +16,6 @@ export default class NewPointView extends AbstractView {
   }
 
   get template() {
-    return createNewPointViewTemplate(this.#filter);
+    return createNewPointTemplate(this.#filter);
   }
 }

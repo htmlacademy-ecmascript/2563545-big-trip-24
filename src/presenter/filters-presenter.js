@@ -1,14 +1,13 @@
-import { render, replace, remove } from '../framework/render.js';
+import { render, replace, remove } from '../framework/render';
 import FiltersView from '../view/filter-view';
 import { UpdateType } from '../const';
 import { filter } from '../utils/filter';
 
 export default class FiltersPresenter {
   #modelFilters = null;
+  #filtersComponent = null;
   #filtersContainer = null;
   #modelPoints = null;
-
-  #filtersComponent = null;
 
   constructor({ filtersContainer, modelPoints, modelFilters }) {
     this.#filtersContainer = filtersContainer;
@@ -35,7 +34,8 @@ export default class FiltersPresenter {
 
     this.#filtersComponent = new FiltersView({
       filters: this.filters,
-      onFiltersChange: this.#handleFiltersChange
+      onFiltersChange: this.#handleFiltersChange,
+      currentFilter: this.#modelFilters.filter,
     });
 
     if (prevFiltersComponent === null) {

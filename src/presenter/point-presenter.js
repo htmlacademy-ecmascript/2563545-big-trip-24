@@ -1,53 +1,41 @@
 import { render, replace, remove } from '../framework/render';
-import PointView from '../view/point-view.js';
-import EditPointView from '../view/edit-point-view.js';
-import { Mode, UpdateType, UserAction } from '../const.js';
+import PointView from '../view/point-view';
+import EditPointView from '../view/edit-point-view';
+import { UpdateType, UserAction, Mode} from '../const';
 
 export default class PointPresenter {
-  #eventsComponent = null;
+  #point = null;
+  #destinations = [];
+  #offers = [];
+
   #pointComponent = null;
   #editPointComponent = null;
 
-  #point = null;
-  // #offers = [];
-  // #destinations = [];
-  #modelDestinations = null;
-  #modelOffers = null;
-
-  #handleModelEvent = null;
+  #eventsComponent = null;
   #handleModeChange = null;
-  #clearPoint = null;
   #resetPointView = null;
   #handleModelUpdate = null;
-
   #mode = Mode.DEFAULT;
 
-  constructor({ eventsComponent, onPointsChange, onModeChange, onPointClear, onEditPointView, onModelUpdate, modelOffers, modelDestinations }) {
+  constructor({ eventsComponent, onModeChange, onEditPointView, onModelUpdate }) {
     this.#eventsComponent = eventsComponent;
-    this.#handleModelEvent = onPointsChange;
     this.#handleModeChange = onModeChange;
-    this.#clearPoint = onPointClear;
     this.#resetPointView = onEditPointView;
     this.#handleModelUpdate = onModelUpdate;
-    this.#modelDestinations = modelDestinations;
-    this.#modelOffers = modelOffers;
   }
 
   init(point, offers, destinations) {
     this.#point = point;
-    // this.#offers = offers;
-    // this.#destinations = destinations;
+    this.#offers = offers;
+    this.#destinations = destinations;
 
     const prevPointComponent = this.#pointComponent;
     const prevEditPointComponent = this.#editPointComponent;
 
     this.#pointComponent = new PointView({
       point: this.#point,
-      // offers: this.#offers,
-      // destinations: this.#destinations,
-      destinations: this.#modelDestinations.destinations,
-      offers: this.#modelOffers.offers,
-
+      offers: this.#offers,
+      destinations: this.#destinations,
       onEditClick: () => {
         this.#replacePointToForm();
       },
@@ -56,18 +44,16 @@ export default class PointPresenter {
 
     this.#editPointComponent = new EditPointView({
       point: this.#point,
-      // offers: this.#offers,
-      // destinations: this.#destinations,
-      destinations: this.#modelDestinations.destinations,
-      offers: this.#modelOffers.offers,
-
-      onEditClick: this.#handleEditClick,
-      onFormSaveClick: this.#handleSaveClick,
-      onFormDeleteClick: this.#handleDeleteClick,
+      offers: this.#offers,
+      destinations: this.#destinations,
+      onEditClick: this.#handleFormEditClick,
+      onFormSaveClick: this.#handleFormSaveClick,
+      onFormDeleteClick: this.#handleFormDeleteClick,
+      isNewPoint: false,
     });
 
     if (prevPointComponent === null || prevEditPointComponent === null) {
-      render(this.#pointComponent, this.#eventsComponent.element());
+      render(this.#pointComponent, this.#eventsComponent);
       return;
     }
 
@@ -77,15 +63,11 @@ export default class PointPresenter {
 
     if (this.#mode === Mode.EDIT) {
       replace(this.#editPointComponent, prevEditPointComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
     remove(prevEditPointComponent);
-  }
-
-  destroy() {
-    remove(this.#pointComponent);
-    remove(this.#editPointComponent);
   }
 
   #replacePointToForm() {
@@ -101,6 +83,11 @@ export default class PointPresenter {
     this.#mode = Mode.DEFAULT;
   }
 
+  destroy(){
+    remove(this.#pointComponent);
+    remove(this.#editPointComponent);
+  }
+
   resetView(){
     if (this.#mode !== Mode.DEFAULT){
       this.#editPointComponent.reset(this.#point);
@@ -108,33 +95,65 @@ export default class PointPresenter {
     }
   }
 
+  setSaving() {
+    if (this.#mode === Mode.EDIT) {
+      this.#editPointComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDIT) {
+      this.#editPointComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#editPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#editPointComponent.shake(resetFormState);
+  }
+
+  #handleFavoriteClick = () => {
+    this.#handleModelUpdate(UserAction.UPDATE_POINT, UpdateType.PATCH, {...this.#point, isFavorite: !this.#point.isFavorite});
+  };
+
+  #handleFormSaveClick = (point) => {
+    this.#handleModelUpdate(UserAction.UPDATE_POINT, UpdateType.MINOR, point);
+  };
+
+  #handleFormDeleteClick = (point) => {
+    this.#handleModelUpdate(UserAction.DELETE_POINT, UpdateType.MINOR, point);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+  };
+
+  #handleFormEditClick = (point) => {
+    this.#resetPointView(point);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+  };
+
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape') {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.#editPointComponent.reset(this.#point);
       this.#replaceFormToPoint();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
-  };
-
-  #handleFavoriteClick = () => {
-    this.#handleModelEvent({ ...this.#point, isFavorite: !this.#point.isFavorite });
-  };
-
-  #handleEditClick = (point) => {
-    this.#resetPointView(point);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-  };
-
-  #handleSaveClick = (point) => {
-    this.#handleModelUpdate(UserAction.UPDATE_POINT, UpdateType.MINOR, point);
-    this.#replaceFormToPoint();
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-  };
-
-  #handleDeleteClick = (point) => {
-    this.#clearPoint(point);
-    this.#replaceFormToPoint();
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 }
