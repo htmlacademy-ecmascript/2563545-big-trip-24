@@ -217,16 +217,13 @@ export default class Presenter {
 
   #handleModelEvent = (updateType, updatedPoint) => {
     switch (updateType) {
-      // - обновить часть списка (например, когда поменялись данные поинта при редактировании)
       case UpdateType.PATCH:
         this.#pointPresenters.get(updatedPoint.id).init(updatedPoint, this.offers, this.destinations);
         break;
-      // - обновить список
       case UpdateType.MINOR:
         this.#clearPointsList();
         this.#renderPointsList();
         break;
-      // - обновить всю доску (с очисткой фильтров и сортировки)
       case UpdateType.MAJOR:
         this.#clearPointsList({ resetFilters: true, resetSorting: true });
         this.#renderPointsList();
