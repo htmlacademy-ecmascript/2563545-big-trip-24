@@ -27,16 +27,16 @@ const getPointDuration = (pointDateFrom, pointDateTo) => {
   return pointDuration.format('mm[M]');
 };
 
-function getWeightForPrice(a, b) {
-  if (a.basePrice < b.basePrice) {
+function getWeightForPrice(pointA, pointB) {
+  if (pointA.basePrice < pointB.basePrice) {
     return 1;
   }
 
-  if (a.basePrice > b.basePrice) {
+  if (pointA.basePrice > pointB.basePrice) {
     return -1;
   }
 
-  if (a.basePrice === b.basePrice) {
+  if (pointA.basePrice === pointB.basePrice) {
     return 0;
   }
 }
@@ -58,22 +58,20 @@ function getWeightForTime(pointA, pointB) {
   }
 }
 
-function getWeigthForDay(a, b) {
-  if (a.dateFrom > b.dateFrom) {
+function getWeigthForDay(pointA, pointB) {
+  if (pointA.dateFrom > pointB.dateFrom) {
     return 1;
   }
 
-  if (a.dateFrom < b.dateFrom) {
+  if (pointA.dateFrom < pointB.dateFrom) {
     return -1;
   }
 
-  if (a.dateFrom === b.dateFrom) {
+  if (pointA.dateFrom === pointB.dateFrom) {
     return 0;
   }
 }
 
-const getOffersByType = (type, offers) => offers.find((offer) => offer.type === type).offers;
-
 const getDestinationId = (destinationName, destinations) => destinations.find((destinationElement) => destinationElement.name === destinationName).id;
 
-export { humanizePointDate, getPointDuration, getWeightForPrice, getWeightForTime, getWeigthForDay, getOffersByType, getDestinationId };
+export { humanizePointDate, getPointDuration, getWeightForPrice, getWeightForTime, getWeigthForDay, getDestinationId };

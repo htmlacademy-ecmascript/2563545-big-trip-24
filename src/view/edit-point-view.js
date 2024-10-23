@@ -191,12 +191,12 @@ export default class EditPointView extends AbstractStatefulView {
       this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
     }
 
-    this.element.querySelector('form').addEventListener('submit', this.#formSaveHandler);
-    this.element.querySelector('form').addEventListener('reset', this.#formDeleteHandler);
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('form').addEventListener('reset', this.#formResetHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#formTypeChangeHandler);
-    this.element.querySelectorAll('.event__offer-label').forEach((element) => element.addEventListener('click', this.#offersChooseHandler));
-    this.element.querySelector('.event__input--price').addEventListener('change', this.#formPriceInputHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#formDestinationChangeHandler);
+    this.element.querySelectorAll('.event__offer-label').forEach((element) => element.addEventListener('click', this.#offerClickHandler));
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
 
     this.#setDateFromPicker();
     this.#setDateToPicker();
@@ -250,12 +250,12 @@ export default class EditPointView extends AbstractStatefulView {
     this.#handleEditClick(EditPointView.parseStateToPoint(this._state));
   };
 
-  #formSaveHandler = (evt) => {
+  #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSave(EditPointView.parseStateToPoint(this._state));
   };
 
-  #formDeleteHandler = (evt) => {
+  #formResetHandler = (evt) => {
     evt.preventDefault();
 
     if (this.#isNewPoint) {
@@ -265,7 +265,7 @@ export default class EditPointView extends AbstractStatefulView {
     }
   };
 
-  #formPriceInputHandler = (evt) => {
+  #priceChangeHandler = (evt) => {
     evt.preventDefault();
     const targetPrice = Number(evt.target.value);
 
@@ -286,12 +286,8 @@ export default class EditPointView extends AbstractStatefulView {
     }));
   };
 
-  #offersChooseHandler = (evt) => {
+  #offerClickHandler = (evt) => {
     evt.preventDefault();
-
-    // if (evt.target.tagName !== 'INPUT') {
-    //   return;
-    // }
 
     let updatedOffers = [];
     const newOffer = evt.currentTarget.dataset.type;
@@ -308,7 +304,7 @@ export default class EditPointView extends AbstractStatefulView {
     });
   };
 
-  #formDestinationChangeHandler = (evt) => {
+  #destinationChangeHandler = (evt) => {
     evt.preventDefault();
     this.#destinations.forEach((destination) => {
       if (evt.target.value === destination.name) {
