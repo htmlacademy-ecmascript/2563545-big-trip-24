@@ -1,8 +1,13 @@
 const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
-const DATE_FORMAT = 'D MMM';
+const DATE_FORMAT = 'MMM D';
+const TRIP_INFO_DATE_FORMAT = 'D MMM';
 const TIME_FORMAT = 'HH:mm';
 const DATE_WITH_TIME_FORMAT = 'DD/MM/YY HH:mm';
+const COUNT_POINTS_ONE = 1;
+const COUNT_POINTS_TWO = 2;
+const COUNT_POINTS_THREE = 3;
+
 
 const FilterType = {
   EVERYTHING: 'everything',
@@ -72,4 +77,4 @@ const Mode = {
   EDIT: 'EDIT'
 };
 
-export { TYPES, DATE_FORMAT, TIME_FORMAT, DATE_WITH_TIME_FORMAT, FilterType, SortType, UserAction, UpdateType, ListEmptyText, BLANK_POINT, Method, URL, TimeLimit, Mode};
+export { COUNT_POINTS_ONE, COUNT_POINTS_TWO, COUNT_POINTS_THREE, TYPES, DATE_FORMAT, TRIP_INFO_DATE_FORMAT, TIME_FORMAT, DATE_WITH_TIME_FORMAT, FilterType, SortType, UserAction, UpdateType, ListEmptyText, BLANK_POINT, Method, URL, TimeLimit, Mode };

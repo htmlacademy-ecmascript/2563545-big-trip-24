@@ -1,5 +1,4 @@
-import { RenderPosition, render } from './framework/render.js';
-import TripView from './view/trip-view.js';
+import TripPresenter from './presenter/trip-presenter';
 import Presenter from './presenter/presenter.js';
 import ModelPoints from './model/model-points.js';
 import ModelFilters from './model/model-filters';
@@ -31,11 +30,15 @@ const filtersPresenter = new FiltersPresenter({
   modelFilters,
 });
 
-render(new TripView(), mainContainer, RenderPosition.AFTERBEGIN);
+const tripPresenter = new TripPresenter({
+  modelPoints,
+  mainContainer,
+});
 
 presenter.init();
 
 modelPoints.init()
   .finally(() => {
     filtersPresenter.init();
+    tripPresenter.init();
   });
