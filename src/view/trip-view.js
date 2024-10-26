@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view';
 import { humanizePointDate } from '../utils/common';
-import { TRIP_INFO_DATE_FORMAT, COUNT_POINT_ONE, COUNT_POINT_TWO, COUNT_POINT_THREE } from '../const';
+import { TRIP_INFO_DATE_FORMAT, COUNT_POINTS_ONE, COUNT_POINTS_TWO, COUNT_POINTS_THREE } from '../const';
 
 const getFirstPoint = (points) => {
   const sortedByDateFromPoints = [...points].sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
@@ -23,23 +23,23 @@ const getDestinationsTitle = (points, destinations) => {
   const firstDestination = destinations.find((destination) => destination.id === firstDestinationId).name;
   const lastDestination = destinations.find((destination) => destination.id === lastDestinationId).name;
 
-  if (points.length === COUNT_POINT_ONE) {
+  if (points.length === COUNT_POINTS_ONE) {
     return `${firstDestination}`;
   }
 
-  if (points.length === COUNT_POINT_TWO) {
+  if (points.length === COUNT_POINTS_TWO) {
     const secondDestinationId = sortedByDateFromPoints[1].destination;
     const secondDestination = destinations.find((destination) => destination.id === secondDestinationId).name;
     return `${firstDestination} &mdash; ${secondDestination}`;
   }
 
-  if (points.length === COUNT_POINT_THREE) {
+  if (points.length === COUNT_POINTS_THREE) {
     const secondDestinationId = sortedByDateFromPoints[1].destination;
     const secondDestination = destinations.find((destination) => destination.id === secondDestinationId).name;
     return `${firstDestination} &mdash; ${secondDestination} &mdash; ${lastDestination}`;
   }
 
-  if (points.length > COUNT_POINT_THREE) {
+  if (points.length > COUNT_POINTS_THREE) {
     return `${firstDestination} &mdash; . . . &mdash; ${lastDestination}`;
   }
 };
