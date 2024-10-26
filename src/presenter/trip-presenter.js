@@ -16,7 +16,7 @@ export default class TripPresenter {
 
   init() {
     if (this.#modelPoints.points.length === 0) {
-      if (this.#tripComponent !== null) {
+      if (this.#tripComponent) {
         remove(this.#tripComponent);
       }
       return;
@@ -30,7 +30,7 @@ export default class TripPresenter {
       offers: this.#modelPoints.offers,
     });
 
-    if(prevTripInfoComponent === null){
+    if(!prevTripInfoComponent){
       render(this.#tripComponent, this.#mainContainer, RenderPosition.AFTERBEGIN);
       return;
     }
