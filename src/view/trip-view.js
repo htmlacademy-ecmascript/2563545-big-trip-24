@@ -48,8 +48,8 @@ const getAllOffersCollection = (offers) => {
   const allOffersInfo = offers.map((offer) => offer.offers).flat();
   const allOffersCollection = new Map();
 
-  allOffersInfo.forEach((offers) => {
-    allOffersCollection.set(offers.id, offers.price);
+  allOffersInfo.forEach((allOffers) => {
+    allOffersCollection.set(allOffers.id, allOffers.price);
   });
 
   return allOffersCollection;
@@ -82,6 +82,7 @@ const getPointsFullPrice = (points) => {
 
 
 function createTripTemplate(points, destinations, offers) {
+
   return `<section class="trip-main__trip-info  trip-info">
   <div class="trip-info__main">
   <h1 class="trip-info__title">${getDestinationsTitle(points, destinations)}</h1>
@@ -92,7 +93,9 @@ function createTripTemplate(points, destinations, offers) {
     Total: &euro;&nbsp;<span class="trip-info__cost-value">${getPointsFullPrice(points) + getOffersFullPrice(points, offers)}</span>
   </p>
   </section>`;
+
 }
+
 
 export default class TripView extends AbstractView {
   #points = [];
