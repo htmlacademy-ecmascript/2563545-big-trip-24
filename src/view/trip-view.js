@@ -48,7 +48,7 @@ const getAllOffersCollection = (offers) => {
   const allOffersInfo = offers.map((offer) => offer.offers).flat();
   const allOffersCollection = new Map();
 
-  allOffersInfo.forEach(() => {
+  allOffersInfo.forEach((offers) => {
     allOffersCollection.set(offers.id, offers.price);
   });
 
