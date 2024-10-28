@@ -77,7 +77,9 @@ const getPointsFullPrice = (points) => {
   const allBasePrice = allBasePriceList.reduce((priceA, priceB) => priceA + priceB, 0);
 
   return allBasePrice;
+
 };
+
 
 function createTripTemplate(points, destinations, offers) {
   return `<section class="trip-main__trip-info  trip-info">

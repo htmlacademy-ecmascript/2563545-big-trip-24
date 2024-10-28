@@ -80,7 +80,7 @@ const getOfferCheckedAttribute = (pointOffers, offerId) => {
 };
 
 const getOffersInfo = (allOffers, pointOffers) => {
-  if (allOffers.length > 0) {
+  if (allOffers?.length > 0) {
     return `<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
@@ -102,7 +102,7 @@ function createEditPointTemplate(point, offers, destinations, isNewPoint) {
     pictures = destinations.find((destinationElement) => destinationElement.id === destination).pictures;
   }
 
-  const allOffers = offers.find((offer) => offer.type === type).offers;
+  const allOffers = offers.find((offer) => offer.type === type)?.offers;
 
   const isTypeChecked = (pointType) => {
     if (pointType === type) {

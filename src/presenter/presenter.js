@@ -100,6 +100,7 @@ export default class Presenter {
     if (this.#isLoading) {
       this.#renderLoading();
       return;
+
     }
     this.renderAddNewPointButton();
     this.#renderPointsList();
@@ -154,6 +155,7 @@ export default class Presenter {
   }
 
   #renderFailedToLoadPoints() {
+    this.#addNewPointButton.element.disabled = true;
     render(this.#failedToLoadComponent, this.#pointsContainer);
   }
 
